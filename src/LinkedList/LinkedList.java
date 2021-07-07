@@ -26,7 +26,11 @@ public class LinkedList<Type> implements Queue<Type>, List<Type> {
 	//common methods
 	public int size() { return size; }
 	public boolean isEmpty() { return size == 0 ? true : false; }
-	public boolean add(Type t) { return addLast(t); }
+	public boolean add(Type t)
+	{
+		addLast(t);
+		return true;
+	}
 	
 	public void print()
 	{
@@ -56,6 +60,7 @@ public class LinkedList<Type> implements Queue<Type>, List<Type> {
 		return true;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public Type remove()
 	{
 		if (size == 0)
@@ -73,6 +78,8 @@ public class LinkedList<Type> implements Queue<Type>, List<Type> {
 		--size;
 		return (Type)returnNode.obj;
 	}
+	
+	@SuppressWarnings("unchecked")
 	public Type poll()
 	{
 		if (size == 0)
@@ -90,12 +97,16 @@ public class LinkedList<Type> implements Queue<Type>, List<Type> {
 		--size;
 		return (Type)returnNode.obj;
 	}
+	
+	@SuppressWarnings("unchecked")
 	public Type element()
 	{
 		if (size == 0) 
 			throw new NullPointerException("Empty");
 		return (Type)head.obj;
 	}
+	
+	@SuppressWarnings("unchecked")
 	public Type peek()
 	{
 		if (size == 0) return null;

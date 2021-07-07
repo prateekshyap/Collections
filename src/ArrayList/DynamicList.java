@@ -124,7 +124,7 @@ public class DynamicList<Type> implements List<Type>
 		return -1;
 	}
 	
-	private void renovate()
+	protected void renovate()
 	{
 		int newSize = elements.length*2;
 		elements = Arrays.copyOf(elements,newSize);
