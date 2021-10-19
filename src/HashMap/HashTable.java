@@ -34,25 +34,65 @@ public class HashTable<KeyType,ValueType> implements Map<KeyType,ValueType> {
 	}
 	public boolean containsKey(KeyType key)
 	{
-		
+		int index = getHash(key);
+        if (status[index] == 1 && keys[index].equals(key))
+            return true;
+        int probe = 2;
+        for (int i = 0; i < probeFactor; ++i)
+        {
+            index += probe;
+            index %= capacity;
+            probe <<= 1;
+            if (status[index] == 1 && keys[index].equals(key))
+                return true;
+        }
+        while (index < capacity && (status[index] == 1 || status[index] == 2))
+        {
+            if (status[index] == 1 && keys[index].equals(key))
+                return true;
+            ++index;
+        }
+        return false;
 	}
 	public boolean containsValue(ValueType value)
 	{
-		
+		return false;
 	}
+	@SuppressWarnings("unchecked")
 	public ValueType get(KeyType key)
 	{
-		
+		int index = getHash(key);
+        if (status[index] == 1 && keys[index].equals(key))
+            return (ValueType)values[index];
+        int probe = 2;
+        for (int i = 0; i < probeFactor; ++i)
+        {
+            index += probe;
+            index %= capacity;
+            probe <<= 1;
+            if (status[index] == 1 && keys[index].equals(key))
+                return (ValueType)values[index];
+        }
+        while (index < capacity && (status[index] == 1 || status[index] == 2))
+        {
+            if (status[index] == 1 && keys[index].equals(key))
+                return (ValueType)values[index];
+            ++index;
+        }
+        return null;
 	}
 	public ValueType put(KeyType key, ValueType value)
 	{
 		 	remove(key);
+		 	if (size == capacity)
+				renovate();
 	        int index = getHash(key);
 	        if (status[index] != 1)
 	        {
 	            status[index] = 1;
 	            keys[index] = (KeyType)key;
 	            values[index] = (ValueType)value;
+	            ++size;
 	            return value;
 	        }
 	        int probe = 2;
@@ -66,6 +106,7 @@ public class HashTable<KeyType,ValueType> implements Map<KeyType,ValueType> {
 	                status[index] = 1;
 	                keys[index] = (KeyType)key;
 	                values[index] = (ValueType)value;
+	                ++size;
 	                return value;
 	            }
 	        }
@@ -73,11 +114,44 @@ public class HashTable<KeyType,ValueType> implements Map<KeyType,ValueType> {
 	        status[index] = 1;
 	        keys[index] = (KeyType)key;
 	        values[index] = (ValueType)value;
+	        ++size;
 	        return value;
 	}
+	
+	@SuppressWarnings("unchecked")
 	public ValueType remove(KeyType key)
 	{
-		
+		int index = getHash(key);
+        if (status[index] == 1 && keys[index].equals(key))
+        {
+            status[index] = 2;
+            --size;
+            return (ValueType)values[index];
+        }
+        int probe = 2;
+        for (int i = 0; i < probeFactor; ++i)
+        {
+            index += probe;
+            index %= capacity;
+            probe <<= 1;
+            if (status[index] == 1 && keys[index].equals(key))
+            {
+                status[index] = 2;
+                --size;
+                return (ValueType)values[index];
+            }
+        }
+        while (index < capacity && (status[index] == 1 || status[index] == 2))
+        {
+            if (keys[index].equals(key))
+            {
+                status[index] = 2;
+                --size;
+                return (ValueType)values[index];
+            }
+            ++index;
+        }
+        return null;
 	}
 	public void clear()
 	{
@@ -85,40 +159,47 @@ public class HashTable<KeyType,ValueType> implements Map<KeyType,ValueType> {
 	}
 	public Set<KeyType> keySet()
 	{
-		
+		return null;
 	}
 	public Structures<ValueType> values()
 	{
-		
+		return null;
 	}
 	public ValueType putIfAbsent(KeyType key, ValueType value)
 	{
-		
+		return null;
 	}
 	public boolean remove(KeyType key, ValueType value)
 	{
-		
+		return false;
 	}
 	public boolean replace(KeyType key, ValueType oldValue, ValueType newValue)
 	{
-		
+		return false;
 	}
 	public ValueType replace(KeyType key, ValueType value)
 	{
-		
+		return null;
 	}
     
     private int getHash(KeyType key)
     {
         String str = String.valueOf(key);
         double sum = 0;
-        int i = 0;
         for (int i = 0; i < str.length(); ++i)
         {
         	int ascii = (int)(str.charAt(i));
             sum += (ascii)*(primes[ascii]);
             sum %= Integer.MAX_VALUE;
         }
-        return (int)sum;
+        return ((int)sum)%capacity;
     }
+    
+    protected void renovate()
+	{
+		capacity *= 2;
+		keys = Arrays.copyOf(keys,capacity);
+		values = Arrays.copyOf(values,capacity);
+		status = Arrays.copyOf(status,capacity);
+	}
 }

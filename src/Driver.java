@@ -2,6 +2,7 @@ import ArrayList.DynamicList;
 import LinkedList.LinkedList;
 import Structures.Queue;
 import Stack.Stack;
+import HashMap.HashTable;
 
 public class Driver
 {
@@ -75,5 +76,14 @@ public class Driver
 		System.out.println(stack.peek());
 		System.out.println(stack.pop());
 		System.out.println(stack.pop());*/
+		
+		/*HashTable<Integer,Integer> hash = new HashTable<Integer,Integer>();
+		hash.put(5, 1);
+		hash.put(6, 2);
+		System.out.println(hash.get(5));
+		hash.put(5, 5);
+		System.out.println(hash.get(5));
+		hash.remove(5);
+		System.out.println(hash.get(5));*/
 	}
 }
