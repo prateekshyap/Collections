@@ -1,6 +1,6 @@
-# What is it?
+# What is in this repository?
 
-Implementation of java like collection framework (such as ArrayList, Stack, HashMap)
+Implementation of java like collection framework (such as ArrayList, Stack, HashMap).
 
 # Steps to run
 
